@@ -1,0 +1,27 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Simulate: counter (Icarus)",
+      "type": "process",
+      "command": "powershell.exe",
+      "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/scripts/simulate.ps1"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": {
+        "owner": "iverilog",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "pattern": { "regexp": "^(.+?):([0-9]+):\\s*(.*)$", "file": 1, "line": 2, "message": 3 }
+      },
+      "presentation": { "reveal": "always", "panel": "dedicated", "clear": true }
+    },
+    {
+      "label": "Waveform: GTKWave (run simulation first)",
+      "type": "process",
+      "command": "D:/iverilog/bin/gtkwave.exe",
+      "args": ["${workspaceFolder}/build/counter.vcd"],
+      "dependsOn": "Simulate: counter (Icarus)",
+      "problemMatcher": []
+    }
+  ]
+}

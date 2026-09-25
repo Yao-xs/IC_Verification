@@ -1,0 +1,9 @@
+build/
+tools/downloads/
+*.vvp
+*.vcd
+*.fst
+.env
+.env.*
+!.env.example
+*.log
