@@ -2,6 +2,8 @@
 
 本目录已配置 Windows 原生 VS Code + Icarus Verilog + 波形查看器 + Codex。
 
+在另一台电脑恢复环境：见 [环境恢复说明](notes/ENVIRONMENT-RESTORE.md)，包含可直接交给 Codex 的指令与自动配置脚本。
+
 ## 立即开始
 
 1. 用 VS Code 打开 `IC-Learning.code-workspace`，或打开整个 `D:\IV_ learning` 文件夹。
