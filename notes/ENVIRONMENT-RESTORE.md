@@ -6,7 +6,7 @@
 
 复制下面这段话，并提供本仓库地址或先打开克隆后的文件夹：
 
-> 请按 notes/ENVIRONMENT-RESTORE.md 恢复此仓库的 Windows + VS Code + Icarus Verilog 学习环境。先检查已安装的 Git、Icarus、VS Code 和推荐扩展，复用现有安装。使用 scripts/setup-environment.ps1 配置本机路径并安装推荐扩展，运行计数器测试，确认输出 PASS: 25 checks 且生成 build/examples/01-counter/counter.vcd。保留我的代码和现有用户设置。如需安装缺失工具，从官方发布渠道获取。最后告诉我如何编译 runoob.v 和查看波形。
+> 请按 notes/ENVIRONMENT-RESTORE.md 恢复此仓库的 Windows + VS Code + Icarus Verilog 学习环境。先检查已安装的 Git、Icarus、VS Code 和推荐扩展，复用现有安装。使用 scripts/setup-environment.ps1 配置本机路径并安装推荐扩展，运行计数器测试，确认输出 PASS: 25 checks 且生成 examples/counter.vcd。保留我的代码和现有用户设置。如需安装缺失工具，从官方发布渠道获取。最后告诉我如何编译 runoob.v 和查看波形。
 
 ## 恢复步骤
 
@@ -20,7 +20,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\setup-environm
 
 脚本会验证工具、更新项目中的路径、安装 `.vscode/extensions.json` 推荐的扩展并运行计数器测试。不下载工具，不修改系统 PATH。若 Icarus 已在 PATH 或标准位置，可省略 `-IcarusBin`。
 
-4. 重新加载 VS Code 并新建终端。按 Ctrl+Shift+B 应输出 `PASS: 25 checks`。打开 `build/examples/01-counter/counter.vcd` 使用 Surfer 查看波形。GTKWave 为可选工具，只有已安装时才使用对应任务。
+4. 重新加载 VS Code 并新建终端。按 Ctrl+Shift+B 应输出 `PASS: 25 checks`。打开 `examples/counter.vcd` 使用 Surfer 查看波形。GTKWave 为可选工具，只有已安装时才使用对应任务。
 5. Codex 扩展的账户登录在本机完成。
 
 ## 保存的编辑体验
@@ -46,4 +46,4 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\simulate.ps1 -
 
 `runoob.v` 通过 `$dumpfile` 和 `$dumpvars` 在运行时生成 `runoob.vcd`。
 
-2026-10-16 路径更新：源代码已统一归入 `examples/`，完整目录见 `examples/README.md`；计数器波形改为 `build/examples/01-counter/counter.vcd`，过程循环示例位于 `examples/05-process-loop/runoob.v`，运行输出位于 `build/examples/05-process-loop/`。以上历史恢复步骤中的旧波形路径以本段为准。
+2026-10-16 路径更新：源代码已统一归入 `examples/`，完整目录见 `examples/README.md`；计数器波形改为 `examples/counter.vcd`，过程循环示例位于 `examples/runoob.v`，所有设计、TB、运行输出直接位于 `examples/`，不再为每个案例建立子目录。以上历史恢复步骤中的旧波形路径以本段为准。

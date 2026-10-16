@@ -1,51 +1,71 @@
-# Verilog 学习案例索引
+# Verilog 案例速查
 
-设计与对应测试放在同一个案例目录，按编号复习。运行命令均在项目根目录 `D:\IV_ learning` 执行。
+所有设计和测试文件直接放在本文件夹中。进入一次 `examples`，就能用短文件名编译、运行和查看波形。
 
-| 案例 | 文件 | 复习重点 | 当前验证情况 |
-|---|---|---|---|
-| [01 · 计数器](01-counter/) | counter.sv、counter_tb.sv | SV 时序过程、复位、使能、溢出、非阻塞赋值 | 有 25 项自检查 |
-| [02 · 四位全加器](02-full-adder/) | full_adder4.v、tb_full_adder4.v | 组合表达式、模块例化、generate、进位链 | 有 512 组穷举自检查 |
-| [03 · 四选一选择器](03-mux4to1/) | mux4to1.v、tb_mux4to1.v | if/else、组合赋值、wire/reg | TB 中未定义的 rgb 调用尚待修复 |
-| [04 · 双向 PAD](04-pad/) | pad.v、tb_pad.v | inout、三态、多驱动、bufif1 | 波形观察型 TB，非自动自检查 |
-| [05 · 过程循环](05-process-loop/) | runoob.v | 命名块、forever、层次访问、结束条件 | 仿真演示；同刻读写存在竞争，终止时刻不应视为固定 |
-| [06 · 位序反转](06-endian-reverse/) | endian_rvs.v | function、参数、for、位选取 | 只有设计模块，无独立 TB；反转的是位序，不是多字节字节序 |
+## 常用操作
 
-## 编译与运行
+在项目根目录的终端执行 `cd examples`。也可在 VS Code 中右键 `examples` → “在集成终端中打开”。之后以四位全加器为例：
 
 ```powershell
-# 默认运行计数器
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\simulate.ps1
+iverilog -g2012 -s tb_full_adder4 -o tb_full_adder4.vvp full_adder4.v tb_full_adder4.v
+if ($LASTEXITCODE -eq 0) { vvp tb_full_adder4.vvp }
+gtkwave tb_full_adder4.vcd
+```
 
-# 选择案例：将 full-adder 换成表中其他名称
+VVP 和 VCD 就在源文件旁边，无须切换输出目录；它们已被 Git 忽略。
+
+## 案例索引
+
+| 案例 | 设计文件 | 测试文件/顶层 | 复习重点与状态 |
+|---|---|---|---|
+| 计数器 | [counter.sv](counter.sv) | [counter_tb.sv](counter_tb.sv) / counter_tb | 时钟、复位、使能；25 项检查 |
+| 四位全加器 | [full_adder4.v](full_adder4.v) | [tb_full_adder4.v](tb_full_adder4.v) / tb_full_adder4 | 模块例化、进位链；512 组检查 |
+| 四选一选择器 | [mux4to1.v](mux4to1.v) | [tb_mux4to1.v](tb_mux4to1.v) / tb_mux4to1 | 组合 if；原 TB 的 rgb 调用未定义 |
+| 双向 PAD | [pad.v](pad.v) | [tb_pad.v](tb_pad.v) / tb_pad | inout、z、多驱动；波形观察 |
+| 过程循环 | [runoob.v](runoob.v) | runoob | 命名块、循环、层次访问；有同刻读写竞争 |
+| 位序反转 | [endian_rvs.v](endian_rvs.v) | endian_rvs，无 TB | 函数、参数、位选取；仅展开不能证明功能正确 |
+
+## 手动编译
+
+下列命令均在 `examples` 中执行。编译成功后再执行对应的 `vvp`。
+
+```powershell
+# 计数器
+iverilog -g2012 -s counter_tb -o counter_tb.vvp counter.sv counter_tb.sv
+if ($LASTEXITCODE -eq 0) { vvp counter_tb.vvp }
+
+# 四位全加器
+iverilog -g2012 -s tb_full_adder4 -o tb_full_adder4.vvp full_adder4.v tb_full_adder4.v
+if ($LASTEXITCODE -eq 0) { vvp tb_full_adder4.vvp }
+
+# 双向 PAD
+iverilog -g2012 -s tb_pad -o tb_pad.vvp pad.v tb_pad.v
+if ($LASTEXITCODE -eq 0) { vvp tb_pad.vvp }
+
+# 过程循环
+iverilog -g2012 -s runoob -o runoob.vvp runoob.v
+if ($LASTEXITCODE -eq 0) { vvp runoob.vvp }
+
+# 位序反转：当前没有激励和功能自检查
+iverilog -g2012 -s endian_rvs -o endian_rvs.vvp endian_rvs.v
+```
+
+不要直接编译所有 `*.v`：它们是独立练习，且选择器 TB 有已知错误。每次只列出要运行的设计和对应 TB。
+
+## 可选的一键运行
+
+`Ctrl+Shift+B` 仍运行计数器。“终端 → 运行任务 → Simulate: choose example (Icarus)”可选择其他案例。
+
+脚本方式在项目根目录运行：
+
+```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\simulate.ps1 -Example full-adder
 ```
 
-可选名称为 `counter`、`full-adder`、`mux4to1`、`pad`、`process-loop`、`endian-reverse`。
+在 `examples` 终端中，将脚本路径改为 `..\scripts\simulate.ps1`。脚本和手动操作都把结果放在 `examples`，编译结果名为顶层模块名加 `.vvp`。
 
-在 VS Code 中，`Ctrl+Shift+B` 仍运行计数器；通过“终端 → 运行任务 → Simulate: choose example (Icarus)”可选择其他案例。编译失败会停止，不运行旧的编译结果。
+## 新练习与笔记
 
-## 结果保存位置
+直接在本文件夹新增 `主题.v` 和 `tb_主题.v`，文件名尽量与模块名一致。手动编译不需要登记脚本或新建子目录。波形名由 TB 的 `$dumpfile` 决定。
 
-所有运行结果集中到 `build/examples/对应案例目录/`：
-
-```text
-examples/02-full-adder/                 源代码
-build/examples/02-full-adder/           编译结果与波形
-  simulation.vvp
-  tb_full_adder4.vcd
-```
-
-原来散落在项目根目录的 VVP/VCD 已按案例移到相应结果目录。原 `build/` 下计数器产物以 `legacy-` 前缀归档。旧结果仅作为历史文件保留，不能当作当前代码通过验证的证据；重新运行生成的 `simulation.vvp` 才对应本次编译。
-
-如需手动运行，应先用绝对路径或从项目根目录编译，再切换到结果目录执行 `vvp`，使 `$dumpfile` 的相对文件名保存在该目录。
-
-## 与学习笔记对照
-
-- 概念目录：[Verilog 基础·学习地图](../verilog基础/00｜Verilog基础·学习地图.md)。
-- 代码经验：[学习实验与易错点复盘](../verilog基础/14｜学习实验与易错点复盘.md)。
-- 笔记整理于 2026-10-15，部分文件名和目录描述反映当时状态；本索引为 2026-10-16 整理后的实际路径。
-
-## 新增案例约定
-
-每个新主题新增 `examples/编号-主题/`，在其中放设计和 TB。优先保持文件名与模块名一致，测试模块使用 `tb_` 前缀（既有计数器沿用 counter_tb）。需要加入统一运行器时，在 `scripts/simulate.ps1` 的案例表与 ValidateSet、VS Code 选择列表中同时登记。
+概念整理见 [Verilog 基础·学习地图](../verilog基础/00｜Verilog基础·学习地图.md)，实验经验见 [学习实验与易错点复盘](../verilog基础/14｜学习实验与易错点复盘.md)。笔记中的旧目录描述保留为学习历史，本页为当前文件位置与操作入口。

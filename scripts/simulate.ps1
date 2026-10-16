@@ -7,17 +7,17 @@ param(
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path $PSScriptRoot -Parent
 $cases = @{
-    'counter' = @{ Folder = '01-counter'; Top = 'counter_tb'; Sources = @('counter.sv', 'counter_tb.sv') }
-    'full-adder' = @{ Folder = '02-full-adder'; Top = 'tb_full_adder4'; Sources = @('full_adder4.v', 'tb_full_adder4.v') }
-    'mux4to1' = @{ Folder = '03-mux4to1'; Top = 'tb_mux4to1'; Sources = @('mux4to1.v', 'tb_mux4to1.v') }
-    'pad' = @{ Folder = '04-pad'; Top = 'tb_pad'; Sources = @('pad.v', 'tb_pad.v') }
-    'process-loop' = @{ Folder = '05-process-loop'; Top = 'runoob'; Sources = @('runoob.v') }
-    'endian-reverse' = @{ Folder = '06-endian-reverse'; Top = 'endian_rvs'; Sources = @('endian_rvs.v') }
+    'counter' = @{ Top = 'counter_tb'; Sources = @('counter.sv', 'counter_tb.sv') }
+    'full-adder' = @{ Top = 'tb_full_adder4'; Sources = @('full_adder4.v', 'tb_full_adder4.v') }
+    'mux4to1' = @{ Top = 'tb_mux4to1'; Sources = @('mux4to1.v', 'tb_mux4to1.v') }
+    'pad' = @{ Top = 'tb_pad'; Sources = @('pad.v', 'tb_pad.v') }
+    'process-loop' = @{ Top = 'runoob'; Sources = @('runoob.v') }
+    'endian-reverse' = @{ Top = 'endian_rvs'; Sources = @('endian_rvs.v') }
 }
 $case = $cases[$Example]
 if (!$Top) { $Top = $case.Top }
-$sourceDir = Join-Path $projectRoot ('examples/' + $case.Folder)
-$outputDir = Join-Path $projectRoot ('build/examples/' + $case.Folder)
+$sourceDir = Join-Path $projectRoot 'examples'
+$outputDir = $sourceDir
 $compiler = 'D:/iverilog/bin/iverilog.exe'
 $runtime = 'D:/iverilog/bin/vvp.exe'
 $settingsPath = Join-Path $projectRoot '.vscode/settings.json'
@@ -35,7 +35,7 @@ try {
         throw 'Icarus not found. Run scripts/setup-environment.ps1 -IcarusBin <installation/bin>.'
     }
     New-Item -ItemType Directory -Force -Path $outputDir | Out-Null
-    $outputFile = Join-Path $outputDir 'simulation.vvp'
+    $outputFile = Join-Path $outputDir ($Top + '.vvp')
     $compileArgs = @('-g2012', '-Wall', '-s', $Top, '-o', $outputFile)
     if ($FileList) {
         $compileArgs += @('-f', $FileList)

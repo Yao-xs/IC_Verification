@@ -19,7 +19,7 @@
       "label": "Waveform: GTKWave (run simulation first)",
       "type": "process",
       "command": "${config:verilog.linting.path}/gtkwave.exe",
-      "args": ["${workspaceFolder}/build/examples/01-counter/counter.vcd"],
+      "args": ["${workspaceFolder}/examples/counter.vcd"],
       "dependsOn": "Simulate: counter (Icarus)",
       "problemMatcher": []
     },

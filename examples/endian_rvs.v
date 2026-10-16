@@ -30,7 +30,7 @@ module endian_rvs
     endfunction
 
     initial begin
-        $display("Endian Reverse Module Initialized with N = %d", b);
+        $display("Endian Reverse Module Initialized with N = %d", N);
     end
 
 endmodule
