@@ -2,14 +2,16 @@
 
 本目录已配置 Windows 原生 VS Code + Icarus Verilog + 波形查看器 + Codex。
 
+所有学习案例已集中到 **[examples · 案例索引](examples/README.md)**，按计数器、全加器、选择器、PAD、过程循环和位序反转分别保存。
+
 在另一台电脑恢复环境：见 [环境恢复说明](notes/ENVIRONMENT-RESTORE.md)，包含可直接交给 Codex 的指令与自动配置脚本。
 
 ## 立即开始
 
 1. 用 VS Code 打开 `IC-Learning.code-workspace`，或打开整个 `D:\IV_ learning` 文件夹。
-2. 阅读 `rtl/counter.sv`（设计）与 `tb/counter_tb.sv`（自检查测试平台）。
+2. 阅读 `examples/01-counter/counter.sv`（设计）与 `examples/01-counter/counter_tb.sv`（自检查测试平台）。
 3. 保存修改后按 **Ctrl+Shift+B**，编译并仿真。正确输出为 `PASS: 25 checks`。
-4. 打开 `build/counter.vcd`，使用 Surfer 查看波形；在信号列表选择并添加 `clk`、`rst_n`、`enable`、`count`。
+4. 打开 `build/examples/01-counter/counter.vcd`，使用 Surfer 查看波形；在信号列表选择并添加 `clk`、`rst_n`、`enable`、`count`。
 5. 如需 GTKWave：通过菜单“终端 → 运行任务”选择 `Waveform: GTKWave (run simulation first)`，选中 `counter_tb` 下的信号并添加到波形区。
 
 编译失败会停止执行，不会运行上次生成的仿真程序。测试发现不匹配会用 `$fatal` 返回失败。
@@ -27,11 +29,13 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\simulate.ps1
 等价的手动流程：
 
 ```powershell
-New-Item -ItemType Directory -Force build
-iverilog -g2012 -Wall -s counter_tb -o build/counter.vvp -f sim.f
+New-Item -ItemType Directory -Force build/examples/01-counter
+iverilog -g2012 -Wall -s counter_tb -o build/examples/01-counter/simulation.vvp examples/01-counter/counter.sv examples/01-counter/counter_tb.sv
 # 仅当编译成功后运行下一行
-vvp build/counter.vvp
-gtkwave build/counter.vcd
+Push-Location build/examples/01-counter
+vvp simulation.vvp
+gtkwave counter.vcd
+Pop-Location
 ```
 
 工具目录：`D:\iverilog\bin`。已加入用户 PATH；现有终端可能需要关闭重开。当前工作区额外配置了终端 PATH，因此不依赖旧窗口继承的环境。
@@ -49,7 +53,7 @@ gtkwave build/counter.vcd
 
 可直接尝试：
 
-> 请用中文讲解 rtl/counter.sv 与 tb/counter_tb.sv，说明非阻塞赋值、时钟沿和复位的关系。先提问检查我的理解，再给我一道修改练习。
+> 请用中文讲解 examples/01-counter/counter.sv 与 examples/01-counter/counter_tb.sv，说明非阻塞赋值、时钟沿和复位的关系。先提问检查我的理解，再给我一道修改练习。
 
 > 请在现有测试平台中加入复位释放后的检查，运行 scripts/simulate.ps1，解释每个新增检查覆盖什么行为。只使用当前 Icarus 支持的语法。
 
@@ -57,11 +61,11 @@ gtkwave build/counter.vcd
 
 ## 新建练习
 
-- 设计放在 `rtl/`，测试平台放在 `tb/`；文件按模块名命名。
-- 在 `sim.f` 中列出需要编译的源文件，包定义要排在使用它的文件之前。
-- 默认顶层是 `counter_tb`。更换顶层时运行 `scripts/simulate.ps1 -Top your_tb`，或修改脚本默认值。
-- 默认输出在 `build/`，波形文件名由测试平台的 `$dumpfile` 决定。新练习需同步调整波形任务的文件名。
-- 保存时语法检查使用 Icarus；库查找路径已配置 `rtl` 和 `.sv`。复杂多文件工程以完整 `sim.f` 编译结果为准。
+- 设计与测试放在同一个 `examples/编号-主题/` 子目录；文件按模块名命名。
+- 统一运行器在 `scripts/simulate.ps1` 中维护各案例的源文件列表，不再依赖缺失的根目录 `sim.f`。自定义文件列表仍可通过 `-FileList` 指定。
+- 默认顶层是 `counter_tb`；用 `-Example full-adder` 等选择其他案例，必要时再用 `-Top` 覆盖顶层。
+- 输出在 `build/examples/编号-主题/`，波形文件名由测试平台的 `$dumpfile` 决定。
+- 保存时语法检查使用 Icarus；库查找路径已更新为各案例目录。多文件是否正确以完整编译结果为准。
 - 未安装外部格式化器和 Ctags，因此没有开启自动格式化和依赖 Ctags 的符号导航。
 
 ## 建议学习顺序与工具边界

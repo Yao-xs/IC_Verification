@@ -19,9 +19,27 @@
       "label": "Waveform: GTKWave (run simulation first)",
       "type": "process",
       "command": "${config:verilog.linting.path}/gtkwave.exe",
-      "args": ["${workspaceFolder}/build/counter.vcd"],
+      "args": ["${workspaceFolder}/build/examples/01-counter/counter.vcd"],
       "dependsOn": "Simulate: counter (Icarus)",
       "problemMatcher": []
+    },
+    {
+      "label": "Simulate: choose example (Icarus)",
+      "type": "process",
+      "command": "powershell.exe",
+      "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/scripts/simulate.ps1", "-Example", "${input:example}"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "dedicated", "clear": true }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "example",
+      "type": "pickString",
+      "description": "Select a learning example (mux4to1 has a known TB error; endian-reverse has no TB)",
+      "options": ["counter", "full-adder", "mux4to1", "pad", "process-loop", "endian-reverse"],
+      "default": "counter"
     }
   ]
 }

@@ -16,7 +16,7 @@ module counter_tb;
     endtask
 
     initial begin
-        $dumpfile("build/counter.vcd");
+        $dumpfile("counter.vcd");
         $dumpvars(0, counter_tb);
         #1 rst_n = 0;
         #1 check_count(0);

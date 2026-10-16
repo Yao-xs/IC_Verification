@@ -1,5 +1,7 @@
 build/
 tools/downloads/
+tools/obsidian-mcp-setup/
+.obsidian/
 *.vvp
 *.vcd
 *.fst

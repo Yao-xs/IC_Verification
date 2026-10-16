@@ -5,7 +5,7 @@
   "verilog.linting.linter": "iverilog",
   "verilog.linting.path": "D:/iverilog/bin",
   "verilog.linting.iverilog.systemVerilog.standard": "SystemVerilog2012",
-  "verilog.linting.iverilog.arguments": "-Wall -y rtl -Y .sv",
+  "verilog.linting.iverilog.arguments": "-Wall -Y .sv -y examples/01-counter -y examples/02-full-adder -y examples/03-mux4to1 -y examples/04-pad -y examples/05-process-loop -y examples/06-endian-reverse",
   "verilog.ctags.enabled": false,
   "terminal.integrated.env.windows": { "PATH": "D:\\iverilog\\bin;${env:PATH}" },
   "git.enabled": true,
